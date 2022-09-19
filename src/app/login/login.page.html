@@ -7,5 +7,28 @@
       <ion-label>Email</ion-label>
       <ion-input formControlName="email"></ion-input>
     </ion-item>
+    <div class="validation-error">
+      <ng-container *ngFor="let validation of validationMessages.email">
+        <!--Estamos diciendo que si ya se modificó el input que muestre el error, si no, que no lo muestre, o que muestre el error en caso de que el usuario haya hecho clic en el input-->
+        <div *ngIf="loginForm.get('email').hasError(validation.type) && 
+          (loginForm.get('email').dirty ||
+          loginForm.get('email').touched)">
+          {{ validation.message }}
+        </div> 
+      </ng-container>
+    </div>
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    <div class="validation-error">
+      <ng-container *ngFor="let validation of validationMessages.password">
+        <div *ngIf="loginForm.get('password').hasError(validation.type) && 
+          (loginForm.get('password').dirty ||
+          loginForm.get('password').touched)">
+          {{ validation.message }}
+        </div> 
+      </ng-container>
+    </div>
   </form>
 </ion-content>
