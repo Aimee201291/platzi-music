@@ -47,7 +47,8 @@ export class LoginPage implements OnInit {
     })
    }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.storage.create();
   }
 
   loginUser(credentials) {
