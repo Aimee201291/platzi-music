@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AuthenticateService } from '../services/authenticate.service';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-login',
@@ -24,22 +25,25 @@ export class LoginPage implements OnInit {
 
   errorMessage: string = "";
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthenticateService, private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+    private authService: AuthenticateService,
+    private router: Router,
+    private storage: Storage) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl( //El primer parámetro que recibe FormControl es qué valor va a tener por defecto el campo
-        "", 
-        Validators.compose([ 
+        "",
+        Validators.compose([
           Validators.required,
-          Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$")
+          Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}")
         ])
       ),
       password: new FormControl(
-        "", 
-        Validators.compose([ 
+        "",
+        Validators.compose([
           Validators.required,
           Validators.minLength(5)  // Estamos indicando que el password debe tener al menos 5 caracteres
         ])
-      )   
+      )
     })
    }
 
@@ -49,7 +53,10 @@ export class LoginPage implements OnInit {
   loginUser(credentials) {
     this.authService.loginUser(credentials).then(res => {
       this.errorMessage="";
+      this.storage.set('isUserLoggedIn', true);
       this.router.navigate(['/home']);
+    }).catch(err => {
+      this.errorMessage = err;
     })
   }
 
